@@ -1,4 +1,7 @@
 #!/usr/bin/python3
-import os, sys
-lst = ' perf script -F ip,dso -f -i /home/tom/perfd/perf.data '
-lst.sort()
+import os
+command = ' perf script -F ip,dso -f -i /home/tom/perfd/perf.data '
+my_dict = {
+     'key': 'string',
+     'value': 'number'
+     }
