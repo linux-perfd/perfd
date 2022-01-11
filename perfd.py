@@ -20,14 +20,13 @@ for name in samples_per_obj_file:
     print(name, samples_per_obj_file[name])
 
 import tempfile
-
+name_perf_file = tempfile.TemporaryFile()
+name_perf_file.name 
+name_perf_file.read()
 
 
 
 from sql30 import db
-name_perf_file = NamedTemporaryFile(delete=False)
-name_perf_file.name 
-name_perf_file.read()
 
 class Perfd(db.Model):
     TABLE = 'reviews'
