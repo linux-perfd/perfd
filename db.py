@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-from db import Database
+from sql30 import db
+
 class Database(db.Model):
     TABLE = 'database'
     DB_SCHEMA = {
