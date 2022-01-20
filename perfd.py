@@ -35,3 +35,20 @@ for name in samples_per_obj_file:
 
 database.commit()
 print(database.read())
+
+#step4
+def prepare_fdata(objfile, first=False):
+    for temp_perf_file.name in os.walk(objfile):
+        if objfile in temp_perf_file.name:
+            print('{0}: {1}')
+            if first == True:
+                break
+
+os.system("/path/to/perf2bolt objfile -p perf_file -o perf_file.fdata")
+
+
+
+
+#need_files = db
+#print(need_files.find('.fdata'))
+#prepare_fdata = 
