@@ -38,6 +38,6 @@ print(database.read())
 
 #step4
 def prepare_fdata(objfile):
-    database.read(objfile)
-    print( database.read(objfile))
-    
+    print(database.read(name_obj_file=objfile))
+perf2bolt = " /path/to/perf2bolt objfile -p perf_file -o perf_file.fdata "
+merge_fdata=" /path/to/merge-fdata perf_file1.fdata perf_file2.fdata perf2bolt  > tmp_fdata "
