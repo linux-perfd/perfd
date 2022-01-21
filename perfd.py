@@ -38,6 +38,20 @@ print(database.read())
 
 #step4
 def prepare_fdata(objfile):
-    print(database.read(name_obj_file=objfile))
-perf2bolt = " /path/to/perf2bolt objfile -p perf_file -o perf_file.fdata "
-merge_fdata=" /path/to/merge-fdata perf_file1.fdata perf_file2.fdata perf2bolt  > tmp_fdata "
+    perf_file = database.read(name_obj_file=objfile)
+    print(perf_file)
+
+perf2bolt = "/path/to/perf2bolt objfile -p perf_file -o perf_file.fdata"
+merge_fdata = "/path/to/merge-fdata perf_file1.fdata perf_file2.fdata perf_file > tmp_fdata" 
+
+temp_fdata = tempfile.NamedTemporaryFile(delete=False)
+# temp_fdata.name
+
+tmp_fdata = "perf script -F ip,dso -f -i " + temp_fdata.name
+print(tmp_fdata)
+
+def prepare_fdata(tmp_fdata):
+    return tmp_fdata 
+
+tmp_fdata.commit()
+print(tmp_fdata.commit())
