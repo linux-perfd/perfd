@@ -87,6 +87,16 @@ for name_obj_file in b:
 
 
 
+import os.path 
+def get_hook(objfile):
+    os.path.basename(__file__)
+def test_hook(objfile):
+    method_bool = get_hook(objfile, 'bool')
+
+
+objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
+
+
 
 
 
