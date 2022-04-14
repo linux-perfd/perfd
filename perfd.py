@@ -66,6 +66,9 @@ def invoke_bolt(objfile, fdata_file):
     outfile = tempfile.mktemp()
     os.system(f"llvm-bolt {objfile} -data={fdata_file} -o {outfile} -dyno-stats")
     return outfile 
+#opt_file = invoke_bolt(name_obj_file, fdata_files)
+#print(opt_file) 
+
 records = database.read() #the information's from db.py
 for _, name_obj_file, number_of_samples in records: #looking for obj_files which are larger or equal 100 samples 
     if name_obj_file in b: #count samples in an every perf_file
@@ -88,42 +91,12 @@ for name_obj_file in b:
 
 
 
-#opt_file = invoke_bolt(name_obj_file, fdata_files)
-#print(opt_file) 
 
 
 
 
 
 
-# probably it will help me on the step 5
-'''
-
-#############################
 
 
-    if file.split('.')[-1] == 'map':
-        
 
-#############################
-
-2)for line in a:
-    if ".map" in line:
-        print(line)
-
-#############################
-
-3)os.system(f"perf2bolt {objfile} -p {...} -o {fdata_file}") #use BOLT for every single obj_files
-
-#############################
-
-    for record in a:
-        fdata_files = tempfile.mktemp()
-        perf_name = record[0]
-        name_obj_file = record[1]
-        os.system(f"perf2bolt {name_obj_file} -p {perf_name} -o {fdata_files}")
-        a.append(fdata_files)
-opt_file = invoke_bolt(name_obj_file, fdata_files)
-print(opt_file) 
-
-'''
