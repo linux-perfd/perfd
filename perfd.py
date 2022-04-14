@@ -3,6 +3,7 @@ import os
 import re
 import tempfile
 import subprocess
+from time import perf_counter
 import db
 
 
@@ -73,19 +74,13 @@ for _, name_obj_file, number_of_samples in records: #looking for obj_files which
         b[name_obj_file] = number_of_samples 
 for name_obj_file in b:
     if b[name_obj_file] >= 100: #find obj_files which are more or equel 100 samples
-        if name_obj_file.split('.')[-1] == 'map' and name_obj_file[0] != "/": #skipping lines on certain conditions 
+        if name_obj_file.split('.')[-1] != 'map' and name_obj_file[0] == "/": #skipping lines on certain conditions 
             a.append(name_obj_file) # add it to the list
             a.sort(reverse=True) #sort the numbers of samples in decreasing order
-    for perf_name, name_obj_file, number_of_samples in a:
-        fdata_file = tempfile.mktemp()
-        os.system(f"perf2bolt {name_obj_file} -p {number_of_samples} -o {fdata_file}")
-        a.append(fdata_file)
-
-
-    
-
-         
-        
+            objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
+            fdata_files = tempfile.mktemp()
+            os.system(f"perf2bolt {objfile} -p {name_obj_file} -o {fdata_files}")
+            print(fdata_files)
 
 
 
@@ -93,7 +88,7 @@ for name_obj_file in b:
 
 
 
-#opt_file = invoke_bolt(objfile, fdata)
+#opt_file = invoke_bolt(name_obj_file, fdata_files)
 #print(opt_file) 
 
 
@@ -121,5 +116,14 @@ for name_obj_file in b:
 3)os.system(f"perf2bolt {objfile} -p {...} -o {fdata_file}") #use BOLT for every single obj_files
 
 #############################
+
+    for record in a:
+        fdata_files = tempfile.mktemp()
+        perf_name = record[0]
+        name_obj_file = record[1]
+        os.system(f"perf2bolt {name_obj_file} -p {perf_name} -o {fdata_files}")
+        a.append(fdata_files)
+opt_file = invoke_bolt(name_obj_file, fdata_files)
+print(opt_file) 
 
 '''
