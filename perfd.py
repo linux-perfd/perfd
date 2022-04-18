@@ -60,12 +60,12 @@ objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
 fdata = prepare_fdata(objfile)
 print(fdata)
 '''
-a= []
+a = []
 b = dict()
 def invoke_bolt(objfile, fdata_file):
-    outfile = tempfile.mktemp()
-    os.system(f"llvm-bolt {objfile} -data={fdata_file} -o {outfile} -dyno-stats")
-    return outfile 
+    outfile = tempfile.mktemp() #create a new name for an optimized file
+    os.system(f"llvm-bolt {objfile} -data={fdata_file} -o {outfile} -dyno-stats") #trigger BOLT
+    return outfile  #return an optimized file 
 #opt_file = invoke_bolt(name_obj_file, fdata_files)
 #print(opt_file) 
 
@@ -79,22 +79,22 @@ for name_obj_file in b:
     if b[name_obj_file] >= 100: #find obj_files which are more or equel 100 samples
         if name_obj_file.split('.')[-1] != 'map' and name_obj_file[0] == "/": #skipping lines on certain conditions 
             a.append(name_obj_file) # add it to the list
-            a.sort(reverse=True) #sort the numbers of samples in decreasing order
-            objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
-            fdata_files = tempfile.mktemp()
-            os.system(f"perf2bolt {objfile} -p {name_obj_file} -o {fdata_files}")
-            print(fdata_files)
+new_list = sorted(a, key=lambda name: b[name], reverse=True) #sort object files by the numbers of samples in decreasing order
+#for name in new_list: 
+#    print(name, b[name]) 
+M = 2 
+#print(new_list[:M])
+for objfile in new_list[:M]: #for every new objfile 
+    fdata_file = prepare_fdata(objfile) #prepare a profile 
+    outfile = invoke_bolt(objfile, fdata_file) #trigger BOLT
+    os.remove(fdata_file)
+    os.remove(outfile)
 
 
 
-import os.path 
-def get_hook(objfile):
-    os.path.basename(__file__)
-def test_hook(objfile):
-    method_bool = get_hook(objfile, 'bool')
 
 
-objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
+
 
 
 
