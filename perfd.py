@@ -1,15 +1,12 @@
 #!/usr/bin/python3
 import os
-import re
 import tempfile
 import subprocess
-from time import perf_counter
 import db
 
 
 temp_perf_file = tempfile.NamedTemporaryFile(delete=False, dir='.')
 # temp_perf_file.name
-'''
 os.system("perf record -e cycles:u -j any,u -a -o  " +
           temp_perf_file.name + "  -- sleep 10")
 batcmd = "perf script -F ip,dso -f -i " + temp_perf_file.name
@@ -17,7 +14,6 @@ batcmd = "perf script -F ip,dso -f -i " + temp_perf_file.name
 result = subprocess.check_output(batcmd, shell=True, text=True)
 lines = result.splitlines()
 samples_per_obj_file = dict()
-
 
 for line in lines:
     cols = line.split()
@@ -28,7 +24,6 @@ for line in lines:
         samples_per_obj_file[name] += 1
     else:
         samples_per_obj_file[name] = 1
-'''
 
 samples_per_obj_file = dict() # i will have to delete it when i finish the step 5
 database = db.Database()
@@ -37,7 +32,7 @@ for name in samples_per_obj_file:
     database.write(
         perf_name=temp_perf_file.name,
         name_obj_file=name,
-        number_of_samples=samples_per_obj_file[name])
+        amount_of_samples=samples_per_obj_file[name])
 
 database.commit()
 
@@ -55,19 +50,12 @@ def prepare_fdata(objfile):
         os.remove(fdata_file) # delete the mid-term fdata files and save only a last one
     return merge_fdata
 
-'''
-objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
-fdata = prepare_fdata(objfile)
-print(fdata)
-'''
 a = []
 b = dict()
 def invoke_bolt(objfile, fdata_file):
     outfile = tempfile.mktemp() #create a new name for an optimized file
     os.system(f"llvm-bolt {objfile} -data={fdata_file} -o {outfile} -dyno-stats") #trigger BOLT
     return outfile  #return an optimized file 
-#opt_file = invoke_bolt(name_obj_file, fdata_files)
-#print(opt_file) 
 
 records = database.read() #the information's from db.py
 for _, name_obj_file, number_of_samples in records: #looking for obj_files which are larger or equal 100 samples 
@@ -80,33 +68,3 @@ for name_obj_file in b:
         if name_obj_file.split('.')[-1] != 'map' and name_obj_file[0] == "/": #skipping lines on certain conditions 
             a.append(name_obj_file) # add it to the list
 new_list = sorted(a, key=lambda name: b[name], reverse=True) #sort object files by the numbers of samples in decreasing order
-#for name in new_list: 
-#    print(name, b[name]) 
-M = 2 
-#print(new_list[:M])
-for objfile in new_list[:M]: #for every new objfile 
-    fdata_file = prepare_fdata(objfile) #prepare a profile 
-    outfile = invoke_bolt(objfile, fdata_file) #trigger BOLT
-    os.remove(fdata_file)
-    os.remove(outfile)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
