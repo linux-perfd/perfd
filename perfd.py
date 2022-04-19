@@ -4,7 +4,6 @@ import tempfile
 import subprocess
 import db
 
-
 temp_perf_file = tempfile.NamedTemporaryFile(delete=False, dir='.')
 # temp_perf_file.name
 os.system("perf record -e cycles:u -j any,u -a -o  " +
