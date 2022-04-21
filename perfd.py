@@ -1,10 +1,8 @@
 #!/usr/bin/python3
-from doctest import Example
 import os
 import tempfile
 import subprocess
 import db
-
 
 temp_perf_file = tempfile.NamedTemporaryFile(delete=False, dir='.')
 # temp_perf_file.name
@@ -49,11 +47,6 @@ def prepare_fdata(objfile):
     for fdata_file in fdata_files: 
         os.remove(fdata_file) # delete the mid-term fdata files and save only a last one
     return merge_fdata
-
-
-objfile = '/usr/lib/x86_64-linux-gnu/gvfs/libgvfscommon.so'
-fdata = prepare_fdata(objfile)
-print(fdata)
 
 a = []
 b = dict()
