@@ -2,6 +2,7 @@
 import os
 import tempfile
 import subprocess
+import re 
 import db
 
 temp_perf_file = tempfile.NamedTemporaryFile(delete=False, dir='.')
@@ -67,9 +68,30 @@ for name_obj_file in b:
             a.append(name_obj_file) # add it to the list
 new_list = sorted(a, key=lambda name: b[name], reverse=True) #sort object files by the numbers of samples in decreasing order
  
-M = 2 
+M = 1 
 for objfile in new_list[:M]: #for every new objfile 
     fdata_file = prepare_fdata(objfile) #prepare a profile 
-    outfile = invoke_bolt(objfile, fdata_file) #trigger BOLT
+    outfile = invoke_bolt(objfile, fdata_file) #trigger BOLT   
     os.remove(fdata_file)
-    os.remove(outfile)
+    print(outfile)
+
+def get_hook(objfile):
+    hook = open('test_hook.txt', 'r') #create a file, there are two patterns
+    lines = hook.readlines() #read line by line
+    for line in lines:
+        cols = line.split() #split each line on 2 parts 
+        pattern = cols[0] 
+        script = cols[1]
+        result = re.match(pattern, objfile)
+        if result:
+            return script #if a script is found
+    return None #if a script isn't found 
+ 
+def test_hook(objfile, outfile):
+    hookname = get_hook(objfile) #call get_hook
+    if hookname == None: #if a script isn't found 
+        return False
+    exit_code = os.system(f"{hookname} {objfile} {outfile}")
+    if exit_code == 0: 
+        return True #if the check was succesed
+    return False  #if the check wasn't succesed or found  
