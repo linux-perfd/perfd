@@ -1,6 +1,5 @@
-<p align="center">
-      <img src="Project Logo Url" width="726">
-</p>
+![linux-perfd](https://user-images.githubusercontent.com/94864283/179859682-de27c527-184f-4ee3-8eb8-7dce1fb2ffe7.png)
+
 
 ## About
 In the framework of this project, an automatic profile information collection system using BOLT technology was introduced. When using profile optimizations, Clang compiler performance increases up to 30%, after the profile has been collected, it should be passed to the compiler for re-optimization, but in many cases recompilation is't possible. 
